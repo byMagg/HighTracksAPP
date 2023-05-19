@@ -37,7 +37,7 @@ jobs:
           path: www/
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.5
-        if: contains(github.ref,'refs/heads/master')
+        if: contains(github.ref,'refs/heads/main')
         with:
           branch: gh-pages
           folder: www
