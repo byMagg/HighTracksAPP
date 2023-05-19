@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true">
+  <ion-button id="open-login" fill="clear">
+    <ion-icon name="person"></ion-icon>
+  </ion-button>
+  <div id="container">
+    <h1>HIGH TRACKS</h1>
+    <div id="searchBar">
+      <ion-searchbar mode="ios" (keyup.enter)="search()" [(ngModel)]="query"
+        placeholder="Introduce el nombre de la canción"></ion-searchbar>
+      <ion-buttons>
+        <ion-fab-button (click)="search()" size="small">
+          <ion-icon name="search"></ion-icon>
+        </ion-fab-button>
+      </ion-buttons>
+    </div>
+  </div>
+  <ion-modal trigger="open-login" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-buttons slot="end">
+            <ion-button (click)="cancel()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <login-form [modal]="modal"></login-form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

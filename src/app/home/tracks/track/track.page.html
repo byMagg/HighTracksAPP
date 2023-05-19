@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tracks"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="track">{{track.name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="track" id="container">
+    <div>
+      <ion-card>
+        <ion-img *ngIf="track.album.images[1]" src="{{track.album.images[1].url}}"></ion-img>
+        <ion-img *ngIf="!track.album.images[1] && track.album.images[0].url"
+          src="{{track.album.images[0].url}}"></ion-img>
+        <ion-img *ngIf="track.album.images[0].imageBase64String"
+          [src]="'data:image/jpeg;base64,' + track.album.images[0].imageBase64String"></ion-img>
+      </ion-card>
+    </div>
+    <div id="info">
+      <div id="artist">
+        <h1 *ngFor="let artist of track.album.artists">{{ artist.name }}</h1>
+      </div>
+      <div id="main-info">
+        <div>
+          <span>{{ track.duration_ms | date: 'mm:ss' }} min</span>
+        </div>
+        <div>
+          <span>{{ track.album.release_date }}</span>
+        </div>
+      </div>
+      <audio controls>
+        <source src="{{track.preview_url}}" type="audio/mpeg">
+      </audio>
+    </div>
+  </div>
+  <comments [trackId]="trackId"></comments>
+
+</ion-content>

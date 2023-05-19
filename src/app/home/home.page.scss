@@ -1,0 +1,49 @@
+#container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container h1 {
+  text-align: center;
+  position: relative;
+  width: 80%;
+  font-size: 60px;
+  font-weight: 600;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: repeating-radial-gradient(circle closest-corner at 100px 100px, #553c9a, #b393d3 10%, #553c9a 20%);
+}
+
+#searchBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#searchBar ion-searchbar {
+  // padding: 0;
+  max-width: 350px;
+}
+
+#searchBar {
+  width: 100%;
+}
+
+#open-login {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}

@@ -1,0 +1,169 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar id="top-toolbar">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+      </ion-buttons>
+      <ion-title>
+        <div *ngIf="toggleInsert" class="ion-text-center">
+          <ion-label>Búsqueda en Spotify</ion-label>
+        </div>
+        <ion-segment [scrollable]="true" (ionChange)="changeParams()" [(ngModel)]="filter" *ngIf="!toggleInsert">
+          <ion-segment-button [value]="searchFiltersKeys[i]" *ngFor="let enum of searchFiltersValues; let i = index;">
+            {{enum}}
+          </ion-segment-button>
+        </ion-segment>
+      </ion-title>
+    </ion-toolbar>
+    <ion-toolbar id="bottom-toolbar">
+      <ion-title>
+        <div id="searchBar">
+          <ion-searchbar mode="ios" (keyup.enter)="search()" [(ngModel)]="query"
+            placeholder="Introduce el nombre de la canción"></ion-searchbar>
+          <ion-buttons>
+            <ion-fab-button (click)="search()" size="small">
+              <ion-icon name="search"></ion-icon>
+            </ion-fab-button>
+          </ion-buttons>
+        </div>
+      </ion-title>
+      <ion-buttons slot="end" id="displayInsert" *ngIf="displayInsert">
+        <ion-fab-button *ngIf="!toggleInsert" size="small" (click)="toggleInsertTrack()">
+          <ion-icon name="arrow-down-circle"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button *ngIf="toggleInsert" size="small" (click)="toggleInsertTrack()">
+          <ion-icon name="list"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button id="open-modal" size="small">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-button id="addTracks" *ngIf="toggleInsert && !(tracksToBeAdded.length == 0)" color="success" shape="round"
+      (click)="insertTracks()">
+      <ion-icon name="checkmark"></ion-icon>
+      Añadir {{tracksToBeAdded.length}} canciones
+    </ion-button>
+  </ion-header>
+  <div id="container">
+    <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Añadir canción</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="cancel()">Cancelar</ion-button>
+              <ion-button (click)="confirm(trackToAdd)" color="primary" [strong]="true">Añadir</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input type="text" aria-label="Nombre" [(ngModel)]="trackToAdd.name"
+              placeholder="Nombre de la canción"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Artista/Grupo</ion-label>
+            <ion-input type="text" aria-label="Artista" [(ngModel)]="trackToAdd.album.artists[0].name"
+              placeholder="Artista o grupo"></ion-input>
+          </ion-item>
+          <ion-segment [(ngModel)]="togglePhoto">
+            <ion-segment-button value="url">
+              <ion-label>URL</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="img">
+              <ion-label>Imagen</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          <ion-item *ngIf="togglePhoto === 'url'">
+            <ion-label position="stacked">URL imagen</ion-label>
+            <ion-input type="text" aria-label="URL" [(ngModel)]="trackToAdd.album.images[0].url"
+              placeholder="URL de la imagen"></ion-input>
+          </ion-item>
+          <div style="padding: 45px 0;" *ngIf="togglePhoto === 'img'">
+            <ion-img *ngIf="!trackToAdd.album.images[0].imageBase64String"
+              src="../../../assets/placeholder.png"></ion-img>
+            <ion-img *ngIf="trackToAdd.album.images[0].imageBase64String"
+              [src]="'data:image/jpeg;base64,' + trackToAdd.album.images[0].imageBase64String"></ion-img>
+            <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+              <ion-fab-button (click)="takePicture()">
+                <ion-icon name="camera"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <ion-grid [fixed]="true">
+      <ion-row class="ion-justify-content-center">
+        <ion-card button class="card" *ngFor="let track of tracks">
+          <ion-fab-button size="small" *ngIf="track.preview_url" class="playButton"
+            (click)="ref.src != track.preview_url ? changePreview(ref, track.preview_url) : changePreview(ref)">
+            <ion-icon *ngIf="ref.src != track.preview_url" name="play"></ion-icon>
+            <ion-icon *ngIf="ref.src == track.preview_url" name="pause"></ion-icon>
+          </ion-fab-button>
+          <ion-fab>
+            <ion-fab-button size="small" *ngIf="toggleInsert && !tracksToBeAdded.includes(track)"
+              (click)="tracksToBeAdded.push(track)">
+              <ion-icon name="add"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button color="danger" size="small" *ngIf="toggleInsert && tracksToBeAdded.includes(track)"
+              (click)="tracksToBeAdded.splice(tracksToBeAdded.indexOf(track), 1)">
+              <ion-icon name="close"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button size="small" color="light" *ngIf="!toggleInsert && displayInsert">
+              <ion-icon name="ellipsis-vertical"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-list *ngIf="!toggleInsert && displayInsert">
+              <ion-fab-button>
+                <ion-icon name="pencil" (click)="navigateToTrackEdit(track._id)"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button id="delete-alert" (click)="handleDeleteAlert(track._id)">
+                <ion-icon name="trash" color="danger"></ion-icon>
+              </ion-fab-button>
+            </ion-fab-list>
+          </ion-fab>
+
+          <div class="card" (click)="!toggleInsert && navigateToTrack(track._id)">
+            <section id="img-container">
+              <ion-img *ngIf="track.album.images[1]" src="{{track.album.images[1].url}}"></ion-img>
+              <ion-img *ngIf="!track.album.images[1] && track.album.images[0].url"
+                src="{{track.album.images[0].url}}"></ion-img>
+              <ion-img *ngIf="track.album.images[0].imageBase64String"
+                [src]="'data:image/jpeg;base64,' + track.album.images[0].imageBase64String"></ion-img>
+            </section>
+            <section id="card-info">
+              <article>
+                <div>
+                  <p>{{track.name}}</p>
+                </div>
+              </article>
+              <article>
+                <ion-grid>
+                  <ion-row class="ion-justify-content-center">
+                    <div *ngFor="let artist of track.album.artists">
+                      <ion-label>{{artist.name}}</ion-label>
+                    </div>
+                  </ion-row>
+                </ion-grid>
+              </article>
+              <article>
+                <div id="shadow">
+                  <p>{{( track.duration_ms | date:'mm:ss')}} min</p>
+                </div>
+              </article>
+            </section>
+          </div>
+
+        </ion-card>
+      </ion-row>
+      <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-grid>
+  </div>
+  <audio #ref [src]="previewToPlay"></audio>
+
+</ion-content>

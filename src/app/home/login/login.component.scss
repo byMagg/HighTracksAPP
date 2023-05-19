@@ -1,0 +1,48 @@
+.form {
+    margin-top: 50px;
+}
+
+.label-title {
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.div-button-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.div-label-error {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: var(--ion-color-danger);
+    font-size: smaller;
+    padding: 10px;
+}
+
+section {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+    transform: translateY(-56px);
+}
+
+article {
+    min-width: 300px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+footer {
+    margin: 0 auto;
+}
+
+.form-input {
+    height: 100px;
+}
