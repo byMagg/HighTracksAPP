@@ -62,23 +62,22 @@ jobs:
           image_tag: latest, ${{ github.sha }}
           dockerfile: Dockerfile
           context: ./
-  # deploy:
-  #   needs: [build-and-push-to-gcr-back, build-and-push-to-gcr-front]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Install SSH Key
-  #       uses: shimataro/ssh-key-action@v2
-  #       with:
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         known_hosts: 'un-valor-para-que-no-de-error'
-  #     - name: Adding Known Hosts
-  #       run: ssh-keyscan -H ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
-  #     - name: Deploy
-  #       run: |
-  #           ssh ubuntu@${{ vars.SSH_HOST }} "if [ ! -d 'HighTracksAPP' ]; then \
-  #               git clone https://github.com/byMagg/HighTracksAPP.git; \
-  #             else \
-  #               cd HighTracksAPP && git stash && git fetch --all && git reset --hard origin/master && git pull origin master; \
-  #             fi"
-  #           ssh ubuntu@${{ vars.SSH_HOST }} "cd HighTracksAPP && echo -e 'MONGODB_URI=${{ vars.MONGODB_URI }}\nCLIENT_ID=${{ secrets.CLIENT_ID }}\nCLIENT_SECRET=${{ secrets.CLIENT_SECRET }}' > .env"
-  #           ssh ubuntu@${{ vars.SSH_HOST }} "cd HighTracksAPP && docker-compose pull && docker-compose up -d --remove-orphans && yes | docker image prune"
+  deploy:
+    needs: [build-and-push-to-gcr-front]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: 'un-valor-para-que-no-de-error'
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy
+        run: |
+            ssh ubuntu@${{ vars.SSH_HOST }} "if [ ! -d 'HighTracksAPP' ]; then \
+                git clone https://github.com/byMagg/HighTracksAPP.git; \
+              else \
+                cd HighTracksAPP && git stash && git fetch --all && git reset --hard origin/master && git pull origin master; \
+              fi"
+            ssh ubuntu@${{ vars.SSH_HOST }} "cd HighTracksAPP && docker-compose pull && docker-compose up -d --remove-orphans && yes | docker image prune"
