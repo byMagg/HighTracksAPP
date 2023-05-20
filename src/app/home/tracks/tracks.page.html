@@ -39,7 +39,7 @@
         </ion-fab-button>
       </ion-buttons>
     </ion-toolbar>
-    <ion-button id="addTracks" *ngIf="toggleInsert && !(tracksToBeAdded.length == 0)" color="success" shape="round"
+    <ion-button id="addTracks" *ngIf="toggleInsert && !(tracksToBeAdded.length === 0)" color="success" shape="round"
       (click)="insertTracks()">
       <ion-icon name="checkmark"></ion-icon>
       Añadir {{tracksToBeAdded.length}} canciones
@@ -100,9 +100,9 @@
       <ion-row class="ion-justify-content-center">
         <ion-card button class="card" *ngFor="let track of tracks">
           <ion-fab-button size="small" *ngIf="track.preview_url" class="playButton"
-            (click)="ref.src != track.preview_url ? changePreview(ref, track.preview_url) : changePreview(ref)">
-            <ion-icon *ngIf="ref.src != track.preview_url" name="play"></ion-icon>
-            <ion-icon *ngIf="ref.src == track.preview_url" name="pause"></ion-icon>
+            (click)="ref.src !== track.preview_url ? changePreview(ref, track.preview_url) : changePreview(ref)">
+            <ion-icon *ngIf="ref.src !== track.preview_url" name="play"></ion-icon>
+            <ion-icon *ngIf="ref.src === track.preview_url" name="pause"></ion-icon>
           </ion-fab-button>
           <ion-fab>
             <ion-fab-button size="small" *ngIf="toggleInsert && !tracksToBeAdded.includes(track)"
