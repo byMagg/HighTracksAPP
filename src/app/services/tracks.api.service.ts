@@ -23,7 +23,6 @@ export class TracksApiService {
   async searchTracksSpotify(title: string, offset: number = 0): Promise<Track[]> {
     try {
       const tracks: Track[] = (await lastValueFrom(this.http.get<any>(`${this.url}search/${encodeURI(title)}?offset=${offset}`)))['tracks']['items']
-      console.log(tracks)
       return tracks.map((track: any) => {
         return {
           _id: track.id,
@@ -37,7 +36,7 @@ export class TracksApiService {
     }
   }
 
-  async searchTracks(title: string, _field: SearchFilter = SearchFilter.name): Promise<Track[]> {
+  async searchTracks(title: string, _field: SearchFilter = "name" as SearchFilter): Promise<Track[]> {
     try {
       return await lastValueFrom(this.http.get<Track[]>(`${this.url}tracks/search?${_field}=${encodeURI(title)}`, {
         headers: {

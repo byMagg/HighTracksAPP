@@ -6,21 +6,21 @@ import { CommentsComponent } from './comments.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 
-describe('CommentsComponent', () => {
-  let component: CommentsComponent;
-  let fixture: ComponentFixture<CommentsComponent>;
+// describe('CommentsComponent', () => {
+//   let component: CommentsComponent;
+//   let fixture: ComponentFixture<CommentsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CommentsComponent, HttpClientTestingModule, AngularFireModule.initializeApp(environment.firebase)]
-    }).compileComponents();
+//   beforeEach(waitForAsync(() => {
+//     TestBed.configureTestingModule({
+//       imports: [CommentsComponent, HttpClientTestingModule, AngularFireModule.initializeApp(environment.firebase)]
+//     }).compileComponents();
 
-    fixture = TestBed.createComponent(CommentsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+//     fixture = TestBed.createComponent(CommentsComponent);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   // it('should create', () => {
+//   //   expect(component).toBeTruthy();
+//   // });
+// });

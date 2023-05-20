@@ -24,4 +24,10 @@ describe('LoginComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should check if user is logged', () => {
+    expect(component.logged).toBeFalsy();
+  });
+
+
 });

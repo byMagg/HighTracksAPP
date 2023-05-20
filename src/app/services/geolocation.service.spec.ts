@@ -13,4 +13,9 @@ describe('GeolocationService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  // it('should get current position', async () => {
+  //   const coords = await service.getLocation();
+  //   expect(coords).toBeTruthy();
+  // });
 });

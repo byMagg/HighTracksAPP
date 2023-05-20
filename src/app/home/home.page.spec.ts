@@ -20,4 +20,12 @@ describe('HomePage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('search() should navigate to tracks page', () => {
+    spyOn(component.navCtrl, 'navigateForward');
+    component.query = 'test';
+    component.search();
+    expect(component.navCtrl.navigateForward).toHaveBeenCalledWith(['tracks'], { queryParams: { s: 'test' } });
+  });
+
 });

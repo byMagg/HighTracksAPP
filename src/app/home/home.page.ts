@@ -23,7 +23,7 @@ export class HomePage implements OnInit {
   query: string | undefined;
   @ViewChild(IonModal) modal: IonModal | undefined;
 
-  constructor(private navCtrl: NavController) { }
+  constructor(public navCtrl: NavController) { }
 
   ngOnInit() { }
 

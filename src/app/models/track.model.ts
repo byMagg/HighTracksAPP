@@ -1,5 +1,6 @@
 import { Album } from "./album.model"
 import { Coords } from "./coords.model"
+import { Comment } from "./comment.model"
 
 export class Track {
   _id: string

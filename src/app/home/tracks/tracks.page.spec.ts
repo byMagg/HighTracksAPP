@@ -6,6 +6,11 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environment';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from "@angular/router/testing";
+import { TracksApiService } from 'src/app/services/tracks.api.service';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth.service';
+import { CameraService } from 'src/app/services/camera.service';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 
 
 describe('TracksPage', () => {
@@ -31,4 +36,6 @@ describe('TracksPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
 });
