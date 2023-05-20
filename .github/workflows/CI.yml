@@ -33,13 +33,6 @@ jobs:
         with:
           name: www
           path: www/
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
-        if: contains(github.ref,'refs/heads/main')
-        with:
-          branch: gh-pages
-          folder: www
-          clean: true
   build-and-push-to-gcr-front:
     name: Build & Push to GCR
     needs: [build-front]
@@ -64,6 +57,17 @@ jobs:
     needs: [build-and-push-to-gcr-front]
     runs-on: ubuntu-latest
     steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: www
+      - name: Deploy GitHub Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        if: contains(github.ref,'refs/heads/main')
+        with:
+          branch: gh-pages
+          folder: www
+          clean: true
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -71,7 +75,7 @@ jobs:
           known_hosts: 'un-valor-para-que-no-de-error'
       - name: Adding Known Hosts
         run: ssh-keyscan -H webapps.masterdevevelopment.tech >> ~/.ssh/known_hosts
-      - name: Deploy
+      - name: Deploy to server
         run: |
             ssh ubuntu@webapps.masterdevevelopment.tech "if [ ! -d 'HighTracksAPP' ]; then \
                 git clone https://github.com/byMagg/HighTracksAPP.git; \
