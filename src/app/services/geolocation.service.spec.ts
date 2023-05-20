@@ -14,8 +14,12 @@ describe('GeolocationService', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should get current position', async () => {
-  //   const coords = await service.getLocation();
-  //   expect(coords).toBeTruthy();
-  // });
+  it('should get current position', async () => {
+    spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake((...args: any[]) => {
+      const position = { coords: { latitude: 0, longitude: 0 } };
+      args[0](position);
+    });
+    const coords = await service.getLocation();
+    expect(coords).toBeTruthy();
+  });
 });
