@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-title>{{track?.name}}</ion-title>
     <ion-buttons slot="start">
@@ -14,8 +14,8 @@
     </ion-toolbar>
   </ion-header>
   <form *ngIf="track">
+    <ion-label position="floating">Nombre</ion-label>
     <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
       <ion-input type="text" aria-label="name" [(ngModel)]="track.name" name="name"></ion-input>
     </ion-item>
     <ion-label for="artists" position="floating">Artist</ion-label>
@@ -27,6 +27,7 @@
       <ion-input type="text" [(ngModel)]="artist" name="artists" id="artists" (keyup.Space)="handleArtist(artist)"
         (keyup.enter)="handleArtist(artist)"></ion-input>
     </ion-item>
+    <ion-label position="floating">URLs Imagen</ion-label>
     <ion-item>
       <ion-chip *ngFor="let image of track.album.images; let i = index;">
         <ion-label>{{image.url}}</ion-label>
@@ -35,14 +36,9 @@
       <ion-input type="text" [(ngModel)]="image" name="images" id="images" (keyup.Space)="handleImage(image)"
         (keyup.enter)="handleImage(image)"></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-datetime-button datetime="datetime"></ion-datetime-button>
-      <ion-modal [keepContentsMounted]="true">
-        <ng-template>
-          <ion-datetime [value]="track.album.release_date" id="datetime" name="date"></ion-datetime>
-        </ng-template>
-      </ion-modal>
-    </ion-item>
+    <ion-label position="floating">Fecha</ion-label>
+    <ion-datetime [value]="track.album.release_date" name="date" presentation="date"></ion-datetime>
+
     <ion-button type="submit" (click)="updateTrack()">Update</ion-button>
   </form>
 </ion-content>
