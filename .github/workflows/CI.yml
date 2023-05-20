@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-front:
+    name: Build Front & Testing
     runs-on: ubuntu-latest
     container: node:16-alpine
     steps:
@@ -53,9 +54,10 @@ jobs:
           image_tag: latest, ${{ github.sha }}
           dockerfile: Dockerfile
           context: ./
-  deploy:
+  deploy-ghpages:
     needs: [build-and-push-to-gcr-front]
     runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v3
@@ -68,6 +70,11 @@ jobs:
           branch: gh-pages
           folder: www
           clean: true
+  deploy-server:
+    needs: [build-and-push-to-gcr-front]
+    runs-on: ubuntu-latest
+    name: Deploy to Server
+    steps:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
