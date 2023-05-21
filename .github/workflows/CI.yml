@@ -11,13 +11,25 @@ jobs:
   build-front:
     name: Build Front & Testing
     runs-on: ubuntu-latest
-    container: node:16-alpine
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
       - name: Install Ionic
         run: npm install -g @ionic/cli
       - name: Install dependencies
         run: npm install
+      - name: Unit tests
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: npm run test:prod
+        continue-on-error: true
+      - name: E2E Tests
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: npm run test:e2e
       - name: Save Code Linting Report JSON
         run: npm run lint:json -- --fix
         continue-on-error: true 
@@ -35,22 +47,6 @@ jobs:
         with:
           name: www
           path: www/
-  testing:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm install
-      - name: Unit tests
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: npm run test:prod
-        continue-on-error: true
-      - name: E2E Tests
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: npm run test:e2e
   # build-and-push-to-gcr-front:
   #   name: Build & Push to GCR
   #   needs: [build-front]
