@@ -8,53 +8,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-front:
-    name: Build Front & Testing
-    runs-on: ubuntu-latest
-    container: node:16-alpine
-    steps:
-      - name: Install git and rsync 📚
-        run: |
-          apk update && apk add git rsync
-      - name: Configure git to trust the workspace despite the different owner
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
-      - uses: actions/checkout@v2
-      - name: Install Ionic
-        run: npm install -g @ionic/cli
-      - name: Install dependencies
-        run: npm install
-      # - name: Run headless test
-      #   uses: coactions/setup-xvfb@v1
-      #   with:
-      #     run: npm run test:prod
-      # - name: E2E Tests
-      #   run: |
-      #     npm run test:e2e
-      - name: Save Code Linting Report JSON
-        run: npm run lint:json -- --fix
-        continue-on-error: true 
-      - name: Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@v2
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}" 
-          report-json: "./coverage/eslint-result.json"
-      - name: Build Ionic project
-        run: |
-          ionic build --prod -- --base-href http://hightracks.me/
-          cd www
-          cp index.html 404.html
-      - uses: actions/upload-artifact@v3
-        with:
-          name: www
-          path: www/
+  # build-front:
+  #   name: Build Front & Testing
+  #   runs-on: ubuntu-latest
+  #   container: node:16-alpine
+  #   steps:
+  #     - name: Install git and rsync 📚
+  #       run: |
+  #         apk update && apk add git rsync
+  #     - name: Configure git to trust the workspace despite the different owner
+  #       run: |
+  #         git config --global --add safe.directory "$GITHUB_WORKSPACE"
+  #         git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
+  #     - uses: actions/checkout@v2
+  #     - name: Install Ionic
+  #       run: npm install -g @ionic/cli
+  #     - name: Install dependencies
+  #       run: npm install
+  #     # - name: Run headless test
+  #     #   uses: coactions/setup-xvfb@v1
+  #     #   with:
+  #     #     run: npm run test:prod
+  #     # - name: E2E Tests
+  #     #   run: |
+  #     #     npm run test:e2e
+  #     - name: Save Code Linting Report JSON
+  #       run: npm run lint:json -- --fix
+  #       continue-on-error: true 
+  #     - name: Annotate Code Linting Results
+  #       uses: ataylorme/eslint-annotate-action@v2
+  #       with:
+  #         repo-token: "${{ secrets.GITHUB_TOKEN }}" 
+  #         report-json: "./coverage/eslint-result.json"
+  #     - name: Build Ionic project
+  #       run: |
+  #         ionic build --prod -- --base-href http://hightracks.me/
+  #         cd www
+  #         cp index.html 404.html
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: www
+  #         path: www/
   build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -64,62 +64,62 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run test:prod
-  build-and-push-to-gcr-front:
-    name: Build & Push to GCR
-    needs: [build-front]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v0
-        with:
-          credentials_json: '${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}'
-      - name: Building and pushing the image
-        uses: RafikFarhad/push-to-gcr-github-action@v5-beta
-        with:
-          registry: gcr.io
-          project_id: ${{ vars.GCLOUD_PROJECT_ID }}
-          image_name: hightracks-app
-          image_tag: latest, ${{ github.sha }}
-          dockerfile: Dockerfile
-          context: ./
-  deploy-ghpages:
-    needs: [build-front]
-    runs-on: ubuntu-latest
-    name: Deploy to GitHub Pages
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: www
-          path: www/
-      - name: Deploy GitHub Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
-        if: contains(github.ref,'refs/heads/main')
-        with:
-          branch: gh-pages
-          folder: www
-          clean: true
-  deploy-server:
-    needs: [build-and-push-to-gcr-front]
-    runs-on: ubuntu-latest
-    name: Deploy to Server
-    steps:
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: 'un-valor-para-que-no-de-error'
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H webapps.masterdevevelopment.tech >> ~/.ssh/known_hosts
-      - name: Deploy to server
-        run: |
-            ssh ubuntu@webapps.masterdevevelopment.tech "if [ ! -d 'HighTracksAPP' ]; then \
-                git clone https://github.com/byMagg/HighTracksAPP.git; \
-              else \
-                cd HighTracksAPP && git stash && git fetch --all && git reset --hard origin/main && git pull origin main; \
-              fi"
-            ssh ubuntu@webapps.masterdevevelopment.tech "cd HighTracksAPP && docker-compose pull && docker-compose up -d --remove-orphans && yes | docker image prune"
+  # build-and-push-to-gcr-front:
+  #   name: Build & Push to GCR
+  #   needs: [build-front]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Authenticate to Google Cloud
+  #       id: auth
+  #       uses: google-github-actions/auth@v0
+  #       with:
+  #         credentials_json: '${{ secrets.B64_GCLOUD_SERVICE_ACCOUNT_JSON }}'
+  #     - name: Building and pushing the image
+  #       uses: RafikFarhad/push-to-gcr-github-action@v5-beta
+  #       with:
+  #         registry: gcr.io
+  #         project_id: ${{ vars.GCLOUD_PROJECT_ID }}
+  #         image_name: hightracks-app
+  #         image_tag: latest, ${{ github.sha }}
+  #         dockerfile: Dockerfile
+  #         context: ./
+  # deploy-ghpages:
+  #   needs: [build-front]
+  #   runs-on: ubuntu-latest
+  #   name: Deploy to GitHub Pages
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: www
+  #         path: www/
+  #     - name: Deploy GitHub Pages 🚀
+  #       uses: JamesIves/github-pages-deploy-action@v4.2.5
+  #       if: contains(github.ref,'refs/heads/main')
+  #       with:
+  #         branch: gh-pages
+  #         folder: www
+  #         clean: true
+  # deploy-server:
+  #   needs: [build-and-push-to-gcr-front]
+  #   runs-on: ubuntu-latest
+  #   name: Deploy to Server
+  #   steps:
+  #     - name: Install SSH Key
+  #       uses: shimataro/ssh-key-action@v2
+  #       with:
+  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         known_hosts: 'un-valor-para-que-no-de-error'
+  #     - name: Adding Known Hosts
+  #       run: ssh-keyscan -H webapps.masterdevevelopment.tech >> ~/.ssh/known_hosts
+  #     - name: Deploy to server
+  #       run: |
+  #           ssh ubuntu@webapps.masterdevevelopment.tech "if [ ! -d 'HighTracksAPP' ]; then \
+  #               git clone https://github.com/byMagg/HighTracksAPP.git; \
+  #             else \
+  #               cd HighTracksAPP && git stash && git fetch --all && git reset --hard origin/main && git pull origin main; \
+  #             fi"
+  #           ssh ubuntu@webapps.masterdevevelopment.tech "cd HighTracksAPP && docker-compose pull && docker-compose up -d --remove-orphans && yes | docker image prune"
