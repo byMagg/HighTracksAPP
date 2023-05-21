@@ -19,7 +19,7 @@ jobs:
       - name: Run headless test
         uses: coactions/setup-xvfb@v1
         with:
-          run: npm test
+          run: npm run test:prod
           # working-directory: ./ #optional
           # options: #optional
   # build-front:
