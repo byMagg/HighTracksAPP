@@ -20,6 +20,12 @@ jobs:
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
+      - name: Fetch API repo
+        run: |
+          git clone https://github.com/byMagg/HighTracksAPI.git
+          cd HighTracksAPI
+          npm install
+          nodemon &
       - uses: actions/checkout@v2
       - name: Use Node.js 16.x
         uses: actions/setup-node@v1
