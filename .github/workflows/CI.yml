@@ -25,6 +25,14 @@ jobs:
         run: npm install -g @ionic/cli
       - name: Install dependencies
         run: npm install
+      - name: Save Code Linting Report JSON
+        run: npm run lint:json -- --fix
+        continue-on-error: true 
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}" 
+          report-json: "./coverage/eslint-result.json"
       - name: Build Ionic project
         run: |
           ionic build --prod -- --base-href http://hightracks.me/
