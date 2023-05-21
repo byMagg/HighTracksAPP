@@ -12,7 +12,7 @@
     "lint": "ng lint",
     "build:prod": "ng build --prod",
     "test:prod": "ng test --browsers=ChromeHeadless --watch=false --code-coverage",
-    "lint:json": "eslint src/**/*.ts --format json -o coverage/eslint-result.json "
+    "lint:json": "eslint --ext .ts src/ --format json -o coverage/eslint-result.json "
   },
   "private": true,
   "dependencies": {
