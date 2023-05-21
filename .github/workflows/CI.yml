@@ -71,6 +71,7 @@ jobs:
     needs: [build-front]
     runs-on: ubuntu-latest
     name: Deploy to GitHub Pages
+    container: node:16-alpine
     steps:
       - name: Install git and rsync 📚
         run: |
