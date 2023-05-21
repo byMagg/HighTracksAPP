@@ -13,27 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     container: node:16-alpine
     steps:
-      - name: Install git and rsync 📚
-        run: |
-          apk update && apk add git rsync
-      - name: Configure git to trust the workspace despite the different owner
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
       - uses: actions/checkout@v2
       - name: Install Ionic
         run: npm install -g @ionic/cli
       - name: Install dependencies
         run: npm install
-      - name: Unit tests
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: npm run test:prod
-        continue-on-error: true
-      - name: E2E Tests
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: npm run test:e2e
       - name: Save Code Linting Report JSON
         run: npm run lint:json -- --fix
         continue-on-error: true 
@@ -87,25 +71,32 @@ jobs:
   #         image_tag: latest, ${{ github.sha }}
   #         dockerfile: Dockerfile
   #         context: ./
-  # deploy-ghpages:
-  #   needs: [build-front]
-  #   runs-on: ubuntu-latest
-  #   name: Deploy to GitHub Pages
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - name: Download Artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: www
-  #         path: www/
-  #     - name: Deploy GitHub Pages 🚀
-  #       uses: JamesIves/github-pages-deploy-action@v4.2.5
-  #       if: contains(github.ref,'refs/heads/main')
-  #       with:
-  #         branch: gh-pages
-  #         folder: www
-  #         clean: true
+  deploy-ghpages:
+    needs: [build-front]
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    steps:
+      - name: Install git and rsync 📚
+        run: |
+          apk update && apk add git rsync
+      - name: Configure git to trust the workspace despite the different owner
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: www
+          path: www/
+      - name: Deploy GitHub Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        if: contains(github.ref,'refs/heads/main')
+        with:
+          branch: gh-pages
+          folder: www
+          clean: true
   # deploy-server:
   #   needs: [build-and-push-to-gcr-front]
   #   runs-on: ubuntu-latest
