@@ -8,62 +8,51 @@ on:
   workflow_dispatch:
 
 jobs:
-  # build-front:
-  #   name: Build Front & Testing
-  #   runs-on: ubuntu-latest
-  #   container: node:16-alpine
-  #   steps:
-  #     - name: Install git and rsync 📚
-  #       run: |
-  #         apk update && apk add git rsync
-  #     - name: Configure git to trust the workspace despite the different owner
-  #       run: |
-  #         git config --global --add safe.directory "$GITHUB_WORKSPACE"
-  #         git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
-  #     - uses: actions/checkout@v2
-  #     - name: Install Ionic
-  #       run: npm install -g @ionic/cli
-  #     - name: Install dependencies
-  #       run: npm install
-  #     # - name: Run headless test
-  #     #   uses: coactions/setup-xvfb@v1
-  #     #   with:
-  #     #     run: npm run test:prod
-  #     # - name: E2E Tests
-  #     #   run: |
-  #     #     npm run test:e2e
-  #     - name: Save Code Linting Report JSON
-  #       run: npm run lint:json -- --fix
-  #       continue-on-error: true 
-  #     - name: Annotate Code Linting Results
-  #       uses: ataylorme/eslint-annotate-action@v2
-  #       with:
-  #         repo-token: "${{ secrets.GITHUB_TOKEN }}" 
-  #         report-json: "./coverage/eslint-result.json"
-  #     - name: Build Ionic project
-  #       run: |
-  #         ionic build --prod -- --base-href http://hightracks.me/
-  #         cd www
-  #         cp index.html 404.html
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         name: www
-  #         path: www/
-  build:
+  build-front:
+    name: Build Front & Testing
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-
+    container: node:16-alpine
     steps:
+      - name: Install git and rsync 📚
+        run: |
+          apk update && apk add git rsync
+      - name: Configure git to trust the workspace despite the different owner
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global --add safe.directory /__w/bymagg.github.io/github-pages-deploy-action-temp-deployment-folder
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm run test:prod
+          node-version: 16.x
+      - name: Install Ionic
+        run: npm install -g @ionic/cli
+      - name: Install dependencies
+        run: npm install
+      # - name: Run headless test
+      #   uses: coactions/setup-xvfb@v1
+      #   with:
+      #     run: npm run test:prod
+      # - name: E2E Tests
+      #   run: |
+      #     npm run test:e2e
+      - name: Save Code Linting Report JSON
+        run: npm run lint:json -- --fix
+        continue-on-error: true 
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}" 
+          report-json: "./coverage/eslint-result.json"
+      - name: Build Ionic project
+        run: |
+          ionic build --prod -- --base-href http://hightracks.me/
+          cd www
+          cp index.html 404.html
+      - uses: actions/upload-artifact@v3
+        with:
+          name: www
+          path: www/
   # build-and-push-to-gcr-front:
   #   name: Build & Push to GCR
   #   needs: [build-front]
