@@ -12,6 +12,9 @@ jobs:
     name: Build Front & Testing
     runs-on: ubuntu-latest
     container: node:16-alpine
+    strategy:
+      matrix:
+        node-version: [16.x]
     steps:
       - name: Install git and rsync 📚
         run: |
@@ -27,18 +30,16 @@ jobs:
           npm install
           nodemon &
       - uses: actions/checkout@v2
-      - name: Use Node.js 16.x
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '16.x'
+          node-version: ${{ matrix.node-version }}
       - name: Install Ionic
         run: npm install -g @ionic/cli
       - name: Install dependencies
         run: npm install
-      # - name: Run headless test
-      #   uses: coactions/setup-xvfb@v1
-      #   with:
-      #     run: npm run test:prod
+      - name: Run headless test
+        run: npm run test:prod
       # - name: E2E Tests
       #   run: |
       #     npm run test:e2e
