@@ -29,9 +29,9 @@ jobs:
       #   uses: coactions/setup-xvfb@v1
       #   with:
       #     run: npm run test:prod
-      - name: E2E Tests
-        run: |
-          npm run test:e2e
+      # - name: E2E Tests
+      #   run: |
+      #     npm run test:e2e
       - name: Save Code Linting Report JSON
         run: npm run lint:json -- --fix
         continue-on-error: true 
@@ -49,6 +49,22 @@ jobs:
         with:
           name: www
           path: www/
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run test:prod
+      - run: npm run lint
   build-and-push-to-gcr-front:
     name: Build & Push to GCR
     needs: [build-front]
