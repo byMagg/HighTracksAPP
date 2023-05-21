@@ -33,6 +33,9 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}" 
           report-json: "./coverage/eslint-result.json"
+      - name: E2E Tests
+        run: |
+          npm run test:e2e
       - name: Build Ionic project
         run: |
           ionic build --prod -- --base-href http://hightracks.me/
