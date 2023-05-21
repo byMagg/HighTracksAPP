@@ -25,6 +25,12 @@ jobs:
         run: npm install -g @ionic/cli
       - name: Install dependencies
         run: npm install
+      - name: Test
+        run: |
+          npm run test:prod
+      - name: E2E Tests
+        run: |
+          npm run test:e2e
       - name: Save Code Linting Report JSON
         run: npm run lint:json -- --fix
         continue-on-error: true 
@@ -33,9 +39,6 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}" 
           report-json: "./coverage/eslint-result.json"
-      - name: E2E Tests
-        run: |
-          npm run test:e2e
       - name: Build Ionic project
         run: |
           ionic build --prod -- --base-href http://hightracks.me/
