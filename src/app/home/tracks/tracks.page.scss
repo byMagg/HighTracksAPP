@@ -130,7 +130,11 @@ ion-modal ion-img {
     position: absolute;
 }
 
-
+footer {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
 
 
 @media (max-width: 1075px) {
