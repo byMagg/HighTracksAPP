@@ -163,7 +163,7 @@
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
     </ion-grid>
-    <footer>
+    <footer *ngIf="!toggleInsert">
       <ion-button [routerLink]="['/recommendations']">
         Recomendaciones
       </ion-button>
