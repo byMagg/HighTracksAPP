@@ -113,7 +113,6 @@ export class TracksPage implements OnInit {
     const ev = event as CustomEvent<OverlayEventDetail<Track>>;
     if (ev.detail.role === 'confirm') {
       if (ev.detail.data) {
-        ev.detail.data._id = ev.detail.data?.name;
         if (this.togglePhoto == "url") ev.detail.data.album.images[0].imageBase64String = undefined;
         if (this.togglePhoto == "img") ev.detail.data.album.images[0].url = undefined;
         this.insertTrack(ev.detail.data);
