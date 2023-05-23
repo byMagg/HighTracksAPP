@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, lastValueFrom, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { lastValueFrom } from 'rxjs';
 import { Track } from '../models/track.model';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
@@ -9,6 +8,7 @@ import { SearchFilter } from '../home/tracks/tracks.page';
 import { GeolocationService } from './geolocation.service';
 import { Coords } from '../models/coords.model';
 import { Comment } from '../models/comment.model';
+import { Recommendation } from '../models/recommendation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,27 @@ export class TracksApiService {
   token = this.authService.getJWT();
 
   constructor(private http: HttpClient, private authService: AuthService, private geoService: GeolocationService) { }
+
+  async getRecommendations(): Promise<Recommendation[]> {
+    const titles = (await this.getTracks()).map(track => track.name);
+    const body = {
+      "tracks": titles
+    }
+    try {
+      const res = (await lastValueFrom(this.http.put<any>(`${this.url}recommendations`, body, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })))['tracks'];
+      console.log(res);
+      return res;
+    } catch (error: unknown) {
+      if (error instanceof HttpErrorResponse) {
+        if (error.status === 500) console.log("Error updating track")
+      }
+      return [];
+    }
+  }
 
   async searchTracksSpotify(title: string, offset: number = 0): Promise<Track[]> {
     try {

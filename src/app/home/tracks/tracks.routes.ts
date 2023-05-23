@@ -14,5 +14,5 @@ export const routes: Routes = [
   {
     path: ':id/edit',
     loadComponent: () => import('./track/edit/edit.page').then(m => m.EditPage)
-  }
+  },
 ];
