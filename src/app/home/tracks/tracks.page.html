@@ -46,9 +46,6 @@
     </ion-button>
   </ion-header>
   <div id="container">
-    <ion-button [routerLink]="['/recommendations']">
-      recommendations
-    </ion-button>
     <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
       <ng-template>
         <ion-header>
@@ -166,6 +163,11 @@
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
     </ion-grid>
+    <footer *ngIf="!toggleInsert">
+      <ion-button [routerLink]="['/recommendations']">
+        Recomendaciones
+      </ion-button>
+    </footer>
   </div>
   <audio #ref [src]="previewToPlay"></audio>
 
