@@ -13,22 +13,27 @@
       <ion-title size="large">recommendations</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-spinner *ngIf="!recommendations" name="dots"></ion-spinner>
-
-  <ion-list [inset]="true">
-    <ion-card *ngFor="let track of recommendations">
-      <ion-card-header>
-        <ion-card-title>{{track.title}}</ion-card-title>
-        <ion-card-subtitle>{{track.artist}}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <div>
-          <strong>
-            {{track.year}}
-          </strong>
-        </div>
-        {{track.reason}}
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+  <section class="ion-padding">
+    <article>
+      <h3>Obteniendo recomendaciones...</h3>
+      <ion-spinner *ngIf="!recommendations" name="dots">
+      </ion-spinner>
+    </article>
+    <ion-list [inset]="true">
+      <ion-card *ngFor="let track of recommendations">
+        <ion-card-header>
+          <ion-card-title>{{track.title}}</ion-card-title>
+          <ion-card-subtitle>{{track.artist}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <div>
+            <strong>
+              {{track.year}}
+            </strong>
+          </div>
+          {{track.reason}}
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </section>
 </ion-content>
