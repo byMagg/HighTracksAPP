@@ -22,11 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Unit tests
-        run: npm run test:prod
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: npm run test:prod
         continue-on-error: true
       - name: E2E Tests
-        run: npm run test:e2e
-        continue-on-error: true
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: npm run test:e2e
       - name: Save Code Linting Report JSON
         run: npm run lint:json -- --fix
         continue-on-error: true 
