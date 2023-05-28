@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertController, IonicModule } from '@ionic/angular';
 import { TracksApiService } from 'src/app/services/tracks.api.service';
 import { Comment } from 'src/app/models/comment.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'comments',
@@ -23,7 +24,7 @@ export class CommentsComponent implements OnInit {
   text: string | undefined;
   score: number = 0;
   comments: Comment[] | undefined;
-
+  hideDelete: boolean = AuthService.logged;
 
   constructor(private apiService: TracksApiService, private alertController: AlertController) { }
 

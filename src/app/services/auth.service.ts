@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -23,8 +23,10 @@ export class AuthService {
     this.updateLogin();
   }
 
-  updateLogin() {
-    this.afAuth.authState.subscribe((user) => {
+  async updateLogin() {
+    try {
+      const user = (await firstValueFrom(this.afAuth.authState))
+      console.log(user)
       if (user) {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
@@ -34,9 +36,11 @@ export class AuthService {
         localStorage.removeItem('user');
         AuthService.logged = false;
       }
-    });
-    console.log('Logged: ' + AuthService.logged)
-    console.log('JWT: ' + this.getJWT())
+      console.log('Logged: ' + AuthService.logged)
+      console.log('JWT: ' + this.getJWT())
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   checkLogged() {
