@@ -13,6 +13,7 @@ export const environment = {
     appId: "1:643779822309:web:10e7cb0f1b7b47128c8a0c"
   },
   url: 'http://localhost:3000/api/',
+  e2eUrl: 'http://localhost:8100/',
 };
 
 /*
