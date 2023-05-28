@@ -13,7 +13,7 @@
     "build:prod": "ng build --prod",
     "test:prod": "ng test --browsers=ChromeHeadless --watch=false --code-coverage",
     "lint:json": "eslint --ext .ts src/ --format json -o coverage/eslint-result.json",
-    "test:e2e": "tsc -p e2e && mocha dist"
+    "test:e2e": "tsc -p e2e && URL=http://hightracks.me/ mocha dist/e2e/src/tests"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +35,8 @@
     "@capacitor/status-bar": "^5.0.0",
     "@ionic/angular": "^7.0.0",
     "@ionic/pwa-elements": "^3.1.1",
+    "dot-env": "^0.0.1",
+    "dotenv": "^16.0.3",
     "firebase": "^9.21.0",
     "ionicons": "^7.0.0",
     "rxjs": "~7.5.0",

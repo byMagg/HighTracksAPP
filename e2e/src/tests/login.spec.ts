@@ -3,6 +3,10 @@ import { Builder, By, Key, until } from 'selenium-webdriver'
 import { environment } from 'src/environments/environment';
 const assert = require('assert')
 
+const dotenv = require('dotenv');
+
+dotenv.config()
+
 describe('Login Chrome', function () {
     this.timeout(30000)
     let driver: any;
@@ -15,11 +19,8 @@ describe('Login Chrome', function () {
         await driver.quit();
     })
     it('Login', async function () {
-        if (environment.production) {
-            await driver.get("http://hightracks.me/")
-        } else {
-            await driver.get("http://localhost:8100/")
-        } await driver.manage().window().setRect({ width: 1358, height: 821 })
+        await driver.get(process.env['URL'])
+        await driver.manage().window().setRect({ width: 1358, height: 821 })
         await driver.findElement(By.id("open-login")).click()
         await driver.sleep(500)
         await driver.findElement(By.id("ion-input-0")).click()
