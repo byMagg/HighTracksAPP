@@ -25,7 +25,7 @@
           <p>{{comment.text}}</p>
           <p>{{comment.score}}</p>
         </ion-label>
-        <ion-fab-button color="danger" size="small" (click)="handleDeleteAlert(comment._id)">
+        <ion-fab-button *ngIf="hideDelete" color="danger" size="small" (click)="handleDeleteAlert(comment._id)">
           <ion-icon name="close-circle"></ion-icon>
         </ion-fab-button>
       </ion-item>
