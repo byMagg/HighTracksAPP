@@ -22,12 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Unit tests
-        uses: coactions/setup-xvfb@v1
+        # uses: coactions/setup-xvfb@v1
+        uses: GabrielBB/xvfb-action@v1
         with:
           run: npm run test:prod
         continue-on-error: true
       - name: E2E Tests
-        uses: coactions/setup-xvfb@v1
+        # uses: coactions/setup-xvfb@v1
+        uses: GabrielBB/xvfb-action@v1
         with:
           run: npm run test:e2e
         continue-on-error: true
