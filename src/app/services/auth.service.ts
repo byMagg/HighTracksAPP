@@ -84,10 +84,14 @@ export class AuthService {
   }
 
   async fetchJWT() {
-    const token = (await lastValueFrom(this.http.post<any>(`${environment.url}login`, {
-      email: "test@test.com",
-    }))).token;
-    if (token) this.setJWT(token);
+    try {
+      const token = (await lastValueFrom(this.http.post<any>(`${environment.url}login`, {
+        email: "test@test.com",
+      }))).token;
+      if (token) this.setJWT(token);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   setJWT(token: string) {
