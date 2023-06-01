@@ -24,12 +24,13 @@ export class CommentsComponent implements OnInit {
   text: string | undefined;
   score: number = 0;
   comments: Comment[] | undefined;
-  hideDelete: boolean = AuthService.logged;
+  hideDelete: boolean = true;
 
-  constructor(private apiService: TracksApiService, private alertController: AlertController) { }
+  constructor(private apiService: TracksApiService, private alertController: AlertController, private authService: AuthService) { }
 
   ngOnInit() {
     this.getComments();
+    this.hideDelete = this.authService.checkLogged();
   }
 
   async sendComment() {

@@ -43,7 +43,7 @@ export class TracksPage implements OnInit {
   searchFiltersKeys = Object.keys(SearchFilter);
   filter: SearchFilter = this.searchFiltersKeys[0] as SearchFilter;
 
-  trackToAdd: Track = new Track("", new Album("", "", ""));
+  trackToAdd: Track = Track.createBlankTrack();
 
   photo: SafeResourceUrl | undefined;
 
@@ -115,6 +115,7 @@ export class TracksPage implements OnInit {
       if (ev.detail.data) {
         if (this.togglePhoto == "url") ev.detail.data.album.images[0].imageBase64String = undefined;
         if (this.togglePhoto == "img") ev.detail.data.album.images[0].url = undefined;
+        console.log(ev.detail.data);
         this.insertTrack(ev.detail.data);
       }
     }
@@ -214,7 +215,8 @@ export class TracksPage implements OnInit {
 
   async insertTrack(track: Track) {
     await this.apiService.insertTrack(track);
-    this.tracks = this.tracks?.filter(t => t._id != track._id);
+    // this.tracks = this.tracks?.filter(t => t._id != track._id);
+    this.trackToAdd = Track.createBlankTrack();
     this.toastCtrl.create({
       message: 'Canción insertada correctamente',
       duration: 2000
@@ -235,7 +237,6 @@ export class TracksPage implements OnInit {
   }
 
   async deleteTrack(trackId: string) {
-    console.log("deleteTrack: " + trackId)
     const response = await this.apiService.deleteTrack(trackId);
     if (response) {
       this.toastCtrl.create({

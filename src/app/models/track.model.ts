@@ -18,4 +18,8 @@ export class Track {
     this.name = name
     this.album = album
   }
+
+  static createBlankTrack(): Track {
+    return new Track("", new Album("", "", ""))
+  }
 }
