@@ -30,7 +30,6 @@ jobs:
         uses: coactions/setup-xvfb@v1
         with:
           run: npm run test:e2e
-        continue-on-error: true
       - name: Save Code Linting Report JSON
         run: npm run lint:json -- --fix
         continue-on-error: true 
