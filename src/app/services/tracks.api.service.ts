@@ -173,7 +173,7 @@ export class TracksApiService {
     } catch (error) {
       if (error instanceof GeolocationPositionError) console.log("Error getting location");
     }
-    comment.location = coords;
+    if (coords) comment.location = coords;
     comment._id = ObjectID().toHexString();
     try {
       const respMongo = lastValueFrom(this.http.post<Comment>(`${this.url}tracks/${trackId}/comments`, comment, {
@@ -183,7 +183,6 @@ export class TracksApiService {
       }));
 
       const respFirebase = this.afs.collection('tracks').doc(trackId).collection('comments').doc(comment._id).set(comment);
-
       await Promise.all([respMongo, respFirebase])
 
       return true;
@@ -193,6 +192,7 @@ export class TracksApiService {
           console.log("Track not found");
         }
       }
+      console.error(error);
       return false;
     }
   }
