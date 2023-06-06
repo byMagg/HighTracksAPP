@@ -79,13 +79,13 @@ export class TracksApiService {
 
   async getTrack(trackId: string): Promise<Track> {
     try {
-      const respMongo = await lastValueFrom(this.http.get<Track>(`${this.url}tracks/${trackId}`, {
+      const respMongo = lastValueFrom(this.http.get<Track>(`${this.url}tracks/${trackId}`, {
         headers: {
           Authorization: `Bearer ${this.token}`
         }
       }));
 
-      const respFirebase = await firstValueFrom(this.afs.doc<Track>(`tracks/${trackId}`).valueChanges());
+      const respFirebase = firstValueFrom(this.afs.doc<Track>(`tracks/${trackId}`).valueChanges());
 
       const [trackMongo, trackFirebase] = await Promise.all([respMongo, respFirebase]);
 
