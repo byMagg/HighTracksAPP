@@ -76,11 +76,17 @@ export class TracksApiService {
 
   async getTrack(trackId: string): Promise<Track> {
     try {
-      return await lastValueFrom(this.http.get<Track>(`${this.url}tracks/${trackId}`, {
+      const respMongo = lastValueFrom(this.http.get<Track>(`${this.url}tracks/${trackId}`, {
         headers: {
           Authorization: `Bearer ${this.token}`
         }
       }));
+
+      const respFirebase = firstValueFrom(this.afs.doc<Track>(`tracks/${trackId}`).valueChanges());
+
+      const [trackMongo, trackFirebase] = await Promise.all([respMongo, respFirebase]);
+
+      return trackMongo || trackFirebase;
     } catch (error: unknown) {
       if (error instanceof HttpErrorResponse) {
         if (error.status === 404) throw new Error("Track not found");
@@ -161,14 +167,18 @@ export class TracksApiService {
     } catch (error) {
       if (error instanceof GeolocationPositionError) console.log("Error getting location");
     }
-    comment.location = coords;
-    console.log(comment);
+    if (coords) comment.location = coords;
+    comment._id = ObjectID().toHexString();
     try {
       await lastValueFrom(this.http.post<Comment>(`${this.url}tracks/${trackId}/comments`, comment, {
         headers: {
           Authorization: `Bearer ${this.token}`
         }
       }));
+
+      const respFirebase = this.afs.collection('tracks').doc(trackId).collection('comments').doc(comment._id).set(comment);
+      await Promise.all([respMongo, respFirebase])
+
       return true;
     } catch (error: unknown) {
       if (error instanceof HttpErrorResponse) {
@@ -176,6 +186,7 @@ export class TracksApiService {
           console.log("Track not found");
         }
       }
+      console.error(error);
       return false;
     }
   }
